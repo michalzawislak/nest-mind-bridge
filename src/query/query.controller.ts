@@ -22,6 +22,6 @@ export class QueryController {
     this.conversationThreadService.addUserQuery(threadId, createQueryDto.query);
     const responseData = await this.queryService.createQuery(createQueryDto);
     
-    res.status(201).header('thread-id', threadId).json(responseData);
+    res.status(201).header('Thread-id', threadId).json(responseData);
   }
 }
