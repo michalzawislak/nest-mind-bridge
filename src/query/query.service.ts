@@ -6,7 +6,8 @@ import { LangchainApiService } from 'src/common/langchain-api/langchain-api.serv
 export class QueryService {
   constructor(private readonly langchainApiService: LangchainApiService) {}
 
-  createQuery(createQueryDto: CreateQueryDto) {
-    return this.langchainApiService.getIntention(createQueryDto.query);
+  async createQuery(createQueryDto: CreateQueryDto) {
+    const response = await this.langchainApiService.getIntention(createQueryDto.query);
+    return response;
   }
 }
