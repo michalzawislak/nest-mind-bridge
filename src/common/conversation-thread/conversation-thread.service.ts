@@ -11,14 +11,14 @@ export class ConversationThreadService {
     this.threadCleanupTimeouts = {};
   }
 
-  createThread(): string { 
-    const threadId = uuidv4();
+  createThread(threadId?: string): string { 
+    // const threadId = uuidv4();
 		const autoDeleteTimeMs: number = 600000; // Automatic thread deletion after 10 minutes
 		if (!this.conversationThreads[threadId]) {
       this.conversationThreads[threadId] = {
         userQueries: [],
         AIResponses: []
-      };
+      }
 
 			// Set timeout to delete the thread after a specified time
       this.threadCleanupTimeouts[threadId] = setTimeout(() => {
@@ -28,6 +28,10 @@ export class ConversationThreadService {
     } else {
       throw new Error('Thread already exists');
     }
+  }
+
+	threadExists(threadId: string): boolean {
+    return !!this.conversationThreads[threadId];
   }
 
   addUserQuery(threadId: string, query: string): void {

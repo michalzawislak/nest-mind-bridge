@@ -9,19 +9,20 @@ export class QueryController {
   constructor(private readonly queryService: QueryService, private readonly conversationThreadService: ConversationThreadService) {}
 
   @Post()
-  @Header('thread-id', 'none')
   async create(@Body() createQueryDto: CreateQueryDto, @Res({ passthrough: true }) res: Response) {
-    let threadId: string;
-    
-    if (!createQueryDto.threadId) {
-      threadId = this.conversationThreadService.createThread();
-    } else {
-      threadId = createQueryDto.threadId;
-    }
-    
-    this.conversationThreadService.addUserQuery(threadId, createQueryDto.query);
+    let threadId = createQueryDto.threadId;
+    const threadExists = this.conversationThreadService.threadExists(threadId);
     const responseData = await this.queryService.createQuery(createQueryDto);
     
-    res.status(201).header('Thread-id', threadId).json(responseData);
+    if(threadExists) {
+      this.conversationThreadService.addUserQuery(threadId, createQueryDto.query);
+      res.status(201).json(responseData);
+    } else {
+      threadId = this.conversationThreadService.createThread();
+      res.status(201).header('Thread-id', threadId).json(responseData);
+    }
+  
+    
+    
   }
 }
