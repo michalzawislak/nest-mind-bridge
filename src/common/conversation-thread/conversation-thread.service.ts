@@ -11,8 +11,8 @@ export class ConversationThreadService {
     this.threadCleanupTimeouts = {};
   }
 
-  createThread(threadId?: string): string { 
-    // const threadId = uuidv4();
+  createThread(): string { 
+    let threadId = uuidv4();
 		const autoDeleteTimeMs: number = 600000; // Automatic thread deletion after 10 minutes
 		if (!this.conversationThreads[threadId]) {
       this.conversationThreads[threadId] = {

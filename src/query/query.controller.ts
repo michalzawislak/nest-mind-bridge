@@ -14,15 +14,15 @@ export class QueryController {
     const threadExists = this.conversationThreadService.threadExists(threadId);
     const responseData = await this.queryService.createQuery(createQueryDto);
     
-    if(threadExists) {
+    if(threadId && threadExists) {
       this.conversationThreadService.addUserQuery(threadId, createQueryDto.query);
-      res.status(201).json(responseData);
+      console.log(`Thread ${threadId} exists, adding query: ${createQueryDto.query}`);
+      console.log(`Thread ${threadId} queries: ${this.conversationThreadService.getUserQueries(threadId)}`);
+      res.status(201).header('Thread-id', threadId).json(responseData);
     } else {
       threadId = this.conversationThreadService.createThread();
+      console.log(`Thread ${threadId} created, adding query: ${createQueryDto.query}`);
       res.status(201).header('Thread-id', threadId).json(responseData);
     }
-  
-    
-    
   }
 }
