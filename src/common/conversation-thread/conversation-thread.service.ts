@@ -3,10 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ConversationThreadService {
+  private currentThreadId: string | null;
   private conversationThreads: ConversationThreads;
   private threadCleanupTimeouts: Record<string, NodeJS.Timeout>;
 
   constructor() {
+    this.currentThreadId = null;
     this.conversationThreads = {};
     this.threadCleanupTimeouts = {};
   }
@@ -28,6 +30,14 @@ export class ConversationThreadService {
     } else {
       throw new Error('Thread already exists');
     }
+  }
+
+  setCurrentThreadId(threadId: string): void {
+    this.currentThreadId = threadId;
+  }
+
+   getCurrentThreadId(): string | null {
+    return this.currentThreadId;
   }
 
 	threadExists(threadId: string): boolean {

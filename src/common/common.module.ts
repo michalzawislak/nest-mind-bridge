@@ -7,7 +7,7 @@ import { ConversationThreadModule } from './conversation-thread/conversation-thr
 import { ConversationThreadService } from './conversation-thread/conversation-thread.service';
 
 @Module({
-  imports: [OpenaiApiModule, LangchainApiModule, ConversationThreadModule],
   providers: [OpenaiApiService, LangchainApiService, ConversationThreadService],
+  exports: [OpenaiApiService, LangchainApiService, ConversationThreadService],
 })
 export class CommonModule {}

@@ -21,11 +21,11 @@ export class OpenaiApiService {
 				],
 				model: 'gpt-3.5-turbo',
 			});
-			console.log(`getCompletion(), Usage: ${completion.usage.total_tokens} tokens`);
 			return completion.choices[0].message.content;
 		}
 
 		async getIntention(message: string): Promise<string> {
+			console.log(message);
 			const response = await this.openai.chat.completions.create({
 				model: "gpt-4-0613",
 				messages:  [
@@ -36,7 +36,7 @@ export class OpenaiApiService {
 				],
 				functions: [intentSchema],
 			});
-			console.log(`getIntention(): ${JSON.stringify(response)}`);
+			console.log(response.choices[0].message.content);
 			return response.choices[0].message.content;
 		}
 		
