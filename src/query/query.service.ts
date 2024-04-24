@@ -15,7 +15,6 @@ export class QueryService {
     if (intention && tools[intention.args.category]) {
 			const result = await tools[intention.args.category](createQueryDto.query);
       this.conversationThreadService.addAIResponse(threadId, result);
-      console.log('From createQuery function, threads: ', this.conversationThreadService.getAllThreads());
 			return result;
     } else {
         console.log(intention);
