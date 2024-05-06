@@ -12,13 +12,12 @@ export class QueryService {
     const threadId = this.conversationThreadService.getCurrentThreadId();
     const intention = await this.langchainApiService.getIntention(createQueryDto.query);
     this.conversationThreadService.addUserQuery(threadId, createQueryDto.query);
+    console.log(intention);
     if (intention && tools[intention.args.category]) {
 			const result = await tools[intention.args.category](createQueryDto.query);
       this.conversationThreadService.addAIResponse(threadId, result);
 			return result;
-    } else {
-        console.log(intention);
-    }
-    return 'Action undefined';
+    } 
+    return null;
   }
 }

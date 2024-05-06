@@ -48,5 +48,6 @@ async function getImage(imageDescription: string): Promise<string> {
     size: "1024x1024",
   });
   const image_url = response.data[0].url;
+  console.log('Image generated');
   return image_url;
 }

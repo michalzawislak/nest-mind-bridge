@@ -19,7 +19,7 @@ export const intentSchema = {
                     - 'save': This category is used for recording any information such as notes, meetings, or web addresses that need to be remembered.
                     - 'scrap': Use this category when you need to extract data from external sources like websites, articles, or blogs.
                     - 'memories': This category is meant for storing information related to previously provided data, including memories, previously asked questions, and any additional notes.
-                    - 'social': Use this category when you need to create content for social media (facebook, instagram ,x, etc.).
+                    - 'social': Use this category when you need to create content for social media, usually post on social platform (facebook, instagram ,x ,linkedIn etc.).
                     - 'other': If your question or request does not fit into any of the above categories, set the category parameter to 'other'.
                     `,
                 }

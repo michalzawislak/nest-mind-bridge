@@ -10,14 +10,22 @@ export class LangchainApiService {
 	async getIntention(message: string) {
 		console.log(message);
 		const model = new ChatOpenAI({
-			modelName: "gpt-4-0613",
+			modelName: "gpt-3.5-turbo",
 		}).bind({functions: [intentSchema]});
 		
 		const result = await model.invoke([
 			new HumanMessage(`${message}`)
 		]);
 		const action = parseFunctionCall(result);
-		return action;
+		
+		if(action) {
+			return action;
+		} else {
+			return {
+				name: 'describe_intention',
+				args: { type: 'query', category: 'other' }
+			};
+		}
 	}
 
 	async getCompletion(context: string, message: string) {
