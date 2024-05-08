@@ -1,10 +1,11 @@
-import { getConversationThreadService } from "src/register-services";
+import { getMemoryService, getQdrantService } from "src/register-services";
 
-export function otherActivitiesPrompt() {
-  const conversationThreadService = getConversationThreadService();
-  const currentThreadId = conversationThreadService.getCurrentThreadId();
-  const userThreads = conversationThreadService.getUserQueries(currentThreadId).flat().join('\n');
-  
+export async function otherActivitiesPrompt(userMessage: string) {
+  const memoryService = getMemoryService();
+  const qdrantService = getQdrantService();
+  const searchResult = await qdrantService.searchCollection(userMessage);
+  const uuids = searchResult.map(obj => obj.payload.uuid);
+  const mention = await memoryService.findOne(uuids[0] as string);
   return `
   ### Role Description & Overall Goal
 You are an AI language model tasked with answering user questions in the same language they were asked. Your goal is to provide factual and informative responses, taking into consideration the possibility that the question may be part of a series of questions.
@@ -38,8 +39,8 @@ The current context is not specified.
 You have access to a list of previous user questions. These questions can be used to provide additional information or context when answering a related question.
 
 ### Context / External Knowledge
-You have access to the following list of previous user questions:
-${userThreads}
+You have access to the following list of previous user mentions:
+${mention.content}
 
 ### Date
 The current date is ${new Date()}.

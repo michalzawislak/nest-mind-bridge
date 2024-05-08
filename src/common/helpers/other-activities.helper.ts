@@ -1,6 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "langchain/schema";
-import { otherActivitiesPrompt } from "../prompts/other-activities-system-promt";
+import { otherActivitiesPrompt } from "../prompts/other-activities-system-prompt";
 
 export const other = async (userMessage: string) => {
   const completion = async () => {
@@ -9,7 +9,7 @@ export const other = async (userMessage: string) => {
     });
    
     const { content } = await model.invoke([
-      new SystemMessage(`${otherActivitiesPrompt()}`),
+      new SystemMessage(`${otherActivitiesPrompt(userMessage)}`),
       new HumanMessage(`${userMessage}`)
     ]);
     

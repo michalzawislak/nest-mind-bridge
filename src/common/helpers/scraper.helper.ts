@@ -25,7 +25,7 @@ export const scrap = async (text: string): Promise<string> => {
 	}
 };
 
-export const extractUrlsFromText =(text: string): string => {
+export const extractUrlsFromText = (text: string): string => {
 	const urlRegex = /(https?:\/\/[^\s]+)/;
     const match = text.match(urlRegex);
     return match ? match[0] : null;

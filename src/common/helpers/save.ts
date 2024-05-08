@@ -1,52 +1,41 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { structureUserMessage } from "../prompts/structure-user-message";
 import { HumanMessage, SystemMessage } from "langchain/schema";
-import { getMemoryService } from "src/register-services";
+import { getMemoryService, getQdrantService } from "src/register-services";
 import { v4 as uuidv4 } from "uuid";
-import { SourceType } from "src/memory/dto/create-memory.dto";
+import { CreateMemoryDto, SourceType } from "src/memory/dto/create-memory.dto";
 import { confirmMemorySave } from "../prompts/confirm-memory-save";
-
-export interface StructuredUserMessage {
-  content: string;
-  type: string;
-  source: string;
-}
+import { StructuredUserMessage } from "../models/structured-user-message";
 
 export const save = async (userMessage: string) => {
   const memoryService = getMemoryService();
+  const qdrantService = getQdrantService();
+
   const model = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
   });
-  console.log('Structuring  user message...')
+  
   const { content } = await model.invoke([
     new SystemMessage(`${structureUserMessage}`),
     new HumanMessage(`${userMessage}`)
   ]);
-  let c = JSON.parse(content.toString()) as StructuredUserMessage;
+  let structuredUserMessage = JSON.parse(content.toString()) as StructuredUserMessage;
   
   const confirmation = await model.invoke([
     new SystemMessage(`${confirmMemorySave}`),
     new HumanMessage(`${userMessage}`)
   ]);
-  console.log({
+  const message: CreateMemoryDto = {
     uuid: uuidv4(),
-    content: c.content,
-    type: c.type,
-    source: c.source as SourceType,
+    content: structuredUserMessage.content,
+    type: structuredUserMessage.type,
+    source: structuredUserMessage.source as SourceType,
     created_at: new Date().toISOString(),
     synced: false,
     update: false,
-  });
+  }
   
-  memoryService.create({
-    uuid: uuidv4(),
-    content: c.content,
-    type: c.type,
-    source: c.source as SourceType,
-    created_at: new Date().toISOString(),
-    synced: false,
-    update: false,
-  });
-
+  memoryService.create(message);
+  qdrantService.addDocumentToCollection(message);
   return confirmation.content.toString();
 };
