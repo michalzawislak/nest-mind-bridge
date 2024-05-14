@@ -1,6 +1,5 @@
-import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage } from "langchain/schema";
 import { scraperSystemPromptSchema } from "../prompts/scraper-system-prompt";
+import { getOpenAiService } from "src/register-services";
 
 export const scrap = async (text: string): Promise<string> => {
 	const url = extractUrlsFromText(text);
@@ -32,16 +31,9 @@ export const extractUrlsFromText = (text: string): string => {
 }
 
 export const contentSummary = async (pageContent: string) => {
-	const model = new ChatOpenAI({
-		modelName: "gpt-3.5-turbo",
-	});
-	
-	const { content } = await model.invoke([
-		new SystemMessage(`${scraperSystemPromptSchema}`),
-		new HumanMessage(`${pageContent}`)
-	]);
-	
-	return content;
+	const openaiApiService = getOpenAiService();
+	const completion = await openaiApiService.getCompletion(`${scraperSystemPromptSchema}`, `${pageContent}`);
+	return completion;
 };
 
 export function wait(delay: any) {

@@ -20,7 +20,7 @@ export class QueryController {
     
     if(!threadExists) {
       threadId = this.conversationThreadService.createThread();
-    }
+    } 
     this.conversationThreadService.setCurrentThreadId(threadId);
     const responseData = await this.queryService.createQuery(createQueryDto);
     res.status(201).header('Thread-id', threadId).json(responseData);

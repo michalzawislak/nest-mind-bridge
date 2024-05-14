@@ -1,8 +1,8 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage } from "langchain/schema";
 import { socialMediaPrompt } from "../prompts/social-media-prompt";
 import { imageGenerationDescribePrompt } from "../prompts/image-generation-describe-prompt";
 import { OpenAI } from 'openai';
+import { getOpenAiService } from "src/register-services";
 
 export const social = async (userMessage: string) => {
   const imageDescription = await createImageDescription(userMessage);
@@ -13,29 +13,21 @@ export const social = async (userMessage: string) => {
 };
 
 async function createPostContent(userMessage: string): Promise<string> {
-  const model = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo",
-  });
+  const openaiApiService = getOpenAiService();
   console.log('Creating post content...')
-  const { content } = await model.invoke([
-    new SystemMessage(`${socialMediaPrompt}`),
-    new HumanMessage(`${userMessage}`)
-  ]);
-  console.log('createPostContent content: ', content);
-  return content.toString();
+  const completion = await openaiApiService.getCompletion(`${socialMediaPrompt}`, `${userMessage}`);
+  const model = new ChatOpenAI({
+    modelName: "gpt-4o",
+  });
+
+  console.log('createPostContent content: ', completion);
+  return completion;
 }
 
 async function createImageDescription(shortDescription: string): Promise<string> {
-    const model = new ChatOpenAI({
-      modelName: "gpt-3.5-turbo",
-    });
-    console.log('Creating image description...')
-    const { content } = await model.invoke([
-      new SystemMessage(`${imageGenerationDescribePrompt}`),
-      new HumanMessage(`${shortDescription}`)
-    ]);
-    console.log('createImageDescription content: ', content);
-    return content.toString();
+  const openaiApiService = getOpenAiService();
+  const completion = await openaiApiService.getCompletion(`${imageGenerationDescribePrompt}`, `${shortDescription}`);
+  return completion;
 };
 
 async function getImage(imageDescription: string): Promise<string> {

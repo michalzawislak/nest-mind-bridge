@@ -10,7 +10,7 @@ export class LangchainApiService {
 	async getIntention(message: string) {
 		console.log(message);
 		const model = new ChatOpenAI({
-			modelName: "gpt-3.5-turbo",
+			modelName: "gpt-4o",
 		}).bind({functions: [intentSchema]});
 		
 		const result = await model.invoke([
@@ -30,7 +30,7 @@ export class LangchainApiService {
 
 	async getCompletion(context: string, message: string) {
 		const model = new ChatOpenAI({
-			modelName: "gpt-3.5-turbo",
+			modelName: "gpt-4o",
 	});
 	
 		const result = await model.invoke([

@@ -3,10 +3,15 @@ import { CreateQueryDto } from './dto/create-query.dto';
 import { LangchainApiService } from 'src/common/langchain-api/langchain-api.service';
 import { tools } from 'src/common/helpers/tools.helper';
 import { ConversationThreadService } from 'src/common/conversation-thread/conversation-thread.service';
+import { OpenaiApiService } from 'src/common/openai-api/openai-api.service';
 
 @Injectable()
 export class QueryService {
-  constructor(private readonly langchainApiService: LangchainApiService, private readonly conversationThreadService: ConversationThreadService) {}
+  constructor(
+    private readonly langchainApiService: LangchainApiService, 
+    private readonly conversationThreadService: ConversationThreadService,
+    private readonly openaiApiService: OpenaiApiService
+  ) {}
 
   async createQuery(createQueryDto: CreateQueryDto) {
     const threadId = this.conversationThreadService.getCurrentThreadId();

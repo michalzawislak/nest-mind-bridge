@@ -8,7 +8,9 @@ export class OpenaiApiService {
 		public openai = new OpenAI();
 
     async getCompletion(context: string, message: string): Promise<string> {
+			console.log('>>>>>> MESSAGE: ', message);
 			const completion: ChatCompletion = await this.openai.chat.completions.create({
+				model: 'gpt-4o',
 				messages: [
 					{
 						role: 'system', 
@@ -19,7 +21,6 @@ export class OpenaiApiService {
 						content: message
 					},	
 				],
-				model: 'gpt-3.5-turbo',
 			});
 			return completion.choices[0].message.content;
 		}
@@ -27,7 +28,7 @@ export class OpenaiApiService {
 		async getIntention(message: string): Promise<string> {
 			console.log(message);
 			const response = await this.openai.chat.completions.create({
-				model: "gpt-4-0613",
+				model: "gpt-4o",
 				messages:  [
 					{
 						role: "user",
